@@ -1,7 +1,7 @@
 param (
     $Location = 'North Europe',
     $RG = 'SKILLUP-RG',
-    $ServiceSA = "sasrvdenkozlov",
+    $ServiceSA = "sasrvsunmonster",
     $Container = "files",
     $Path2File = "C:\Users\kozlov.d\Documents\123.txt"
 )

@@ -1,10 +1,10 @@
 param (
     $Location = 'North Europe',
     $RG = 'SKILLUP-RG',
-    $ServiceSA = "sasrvdenkozlov2",
-    $DiagnosticSA = "sadgdenkozlov2",
+    $ServiceSA = "sasrvsunmonster",
+    $DiagnosticSA = "sadgsunmonster",
     $ContainerNames = "logs scipts files",
-    $SAAccessKey = "baWgdW/npRayNSQTu303RwN6VdOK4jBPjtDUDDTPd76W6DefyamYIrcBJXlauO/A+heUTVtuZQZxk1TtDTtb2w=="
+    $SAAccessKey = "ELWgMbaLRPomYJNSumPHJc0T0EU3SVxbqTwKVJ2npOb87wKyRKrl4UQklT0+8u5tKwtlXyS46Y/9fwmaiIg9yg=="
 )
 
 Connect-AzAccount

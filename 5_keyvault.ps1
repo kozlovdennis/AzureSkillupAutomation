@@ -3,7 +3,7 @@ param (
     $RG = 'SKILLUP-RG',
     $RetentionPeriod = 90,
     $SKU = "Standard",
-    $RootUser = "koslovdennis@gmail.com",
+    $RootUser = "sunmonster@sunmonster.onmicrosoft.com",
     $AdminsGroup = "SG Admins",
     $PermsToKeys = "all",
     $PermsToSecrets = "all",
