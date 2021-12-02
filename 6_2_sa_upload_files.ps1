@@ -3,7 +3,7 @@ param (
     $RG = 'SKILLUP-RG',
     $ServiceSA = "sasrvsunmonster",
     $Container = "files",
-    $Path2File = "C:\Users\kozlov.d\Documents\123.txt"
+    $Path2File = "C:\Users\kozlov.d\Downloads\ChromeStandaloneSetup64.exe"
 )
 
 Connect-AzAccount
@@ -16,6 +16,7 @@ $SAContext=$UploadStorage.Context
 
 #Upload a local file
 Set-AzStorageBlobContent -Container $Container -File $Path2File -Context $SAContext
+
 #Upload a local folder content
 #Get-ChildItem -File -Recurse | Set-AzStorageBlobContent -Container "folder2" -Context $SAContext
 
