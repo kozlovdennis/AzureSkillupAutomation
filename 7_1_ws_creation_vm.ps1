@@ -6,12 +6,22 @@ param (
     $NIName = 'webserver-01-ni',
     $VNet = '',
     $VMUsername = 'winadmin',
-    $VMUserPasswd = '',
+    $VMUserPasswd,
     $Blah = ''
 )
 
+#Find the path the script is located and assign to ScriptPath variable
+$ScriptPath = $MyInvocation.MyCommand.Path
+#Linking processing answer function script file:
+$PasswdGeneratorScript = $($(Split-Path $ScriptPath -Parent) + "\" + "7_0_passwd_generator.ps1")
 
+#Executing password generator script
+. $PasswdGeneratorScript
+#Getting the random password into the password variable
+$VMUserPasswd = $(CreatePassword -Min 8 -Max 12)
+Write-Host $VMUserPasswd -ForegroundColor Yellow
 
+<#
 New-AzVm `
 -ResourceGroupName $RG `
 -Name $VMName `
@@ -84,6 +94,6 @@ New-AzVM `
 
 
 
-
+#>
 
 
