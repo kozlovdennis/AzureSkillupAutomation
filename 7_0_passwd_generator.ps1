@@ -1,3 +1,4 @@
+#This script generates random password and returns it to the function initiator (any other script)
 function CreatePassword (){
 
     #Initiating the neccessary parameters
@@ -10,15 +11,13 @@ function CreatePassword (){
     #Choosing the random characters number in this password:
     $MaxNumber = Get-Random -Minimum $Min -Maximum $Max
 
-    #Create random password
-    $Password = New-Object -TypeName PSObject
-    $Password | Add-Member `
-    -MemberType ScriptProperty `
-    -Name "Password" `
-    -Value {
-        ($Chars.tochararray() | Sort-Object {Get-Random})[0..$MaxNumber] -join ''
-    }
+    #Creating a dynamic password object
+    $Passwd = New-Object -TypeName PSObject
+    $Passwd | Add-Member `
+        -MemberType ScriptProperty `
+        -Name "Password" `
+        -Value {($Chars.tochararray() | Sort-Object {Get-Random})[0..$MaxNumber] -join ''}
 
     #Return the password to the initiator of the function
-    $($Password | Select-Object -ExpandProperty "Password")
+    $($Passwd | Select-Object -ExpandProperty "Password")
 }

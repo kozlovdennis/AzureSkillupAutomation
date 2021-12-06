@@ -1,3 +1,4 @@
+#This script creates the WebServer Virtual Machine on Azure
 param (
     $Location = 'North Europe',
     $RG = 'SKILLUP-RG',
