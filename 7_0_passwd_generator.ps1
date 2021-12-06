@@ -6,8 +6,10 @@ param (
 
 #Choosing the random characters number in this password:
 $MaxNumber = Get-Random -Minimum $Min -Maximum $Max
+
 #Showing the maximum number of characters (plus 1 character provided by zero)
-Write-Host "Max Number of Characters for this password is: " ($MaxNumber+1) -ForegroundColor Yellow 
+Write-Host "Max Number of Characters for this password is: " -ForegroundColor Yellow -NoNewline
+Write-Host ($MaxNumber+1)
 
 #Create random password
 $Password = New-Object -TypeName PSObject
@@ -19,7 +21,7 @@ $Password | Add-Member `
     }
 
 Write-Host "The password is: " -ForegroundColor Green -NoNewline
-Write-Host ($Password | Select-Object -ExpandProperty "Password") -ForegroundColor White
+Write-Host ($Password | Select-Object -ExpandProperty "Password")
 Write-Host "The password length is: " -ForegroundColor Green -NoNewline
 Write-Host ($Password | Select-Object -ExpandProperty "Password").Length
 
