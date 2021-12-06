@@ -16,7 +16,7 @@ function CreatePassword (){
     $Passwd | Add-Member `
         -MemberType ScriptProperty `
         -Name "Password" `
-        -Value {($Chars.tochararray() | Sort-Object {Get-Random})[0..$MaxNumber] -join ''}
+        -Value {($Chars.ToCharArray() | Sort-Object {Get-Random})[0..$MaxNumber] -join ''}
 
     #Return the password to the initiator of the function
     $($Passwd | Select-Object -ExpandProperty "Password")
