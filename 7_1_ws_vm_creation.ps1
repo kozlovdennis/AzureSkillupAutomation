@@ -1,17 +1,17 @@
 #This script creates the WebServer Virtual Machine on Azure
 #This script demands the '7_0_passwd_generator.ps1' script and the '7_0_update_keyvault.ps1' script to be in the same folder
 param (
-    $Location = 'North Europe',
-    $RG = 'SKILLUP-RG',
-    $NSG = 'skillup-nsg',
-    $VMName = 'webserver-01',
-    $VMSize = 'Standard B1ms',
-    $NIName = 'webserver-01-ni',
-    $VNet = 'skillup-vnet',
-    $Subnet = 'PrimarySubnet',
-    $PublicIPName = 'webserver-01-pip',
-    $VMUsername = 'winadmin',
-    $Blah = ''
+  $Location = 'North Europe',
+  $RG = 'SKILLUP-RG',
+  $NSG = 'skillup-nsg',
+  $VMName = 'webserver-01',
+  $VMSize = 'Standard B1ms',
+  $NIName = 'webserver-01-ni',
+  $VNet = 'skillup-vnet',
+  $Subnet = 'PrimarySubnet',
+  $PublicIPName = 'webserver-01-pip',
+  $VMUsername = 'winadmin',
+  $Blah = ''
 )
 
 #Connecting to the Azure Account
@@ -27,12 +27,14 @@ $UpdateKeyVaultScript = $($(Split-Path $ScriptPath -Parent) + "\" + "7_0_update_
 #Executing password generator script
 . $PasswdGeneratorScript
 #Getting the random password into the password variable
-$VMUserPasswd = $(CreatePassword -Min 8 -Max 12)
+$Passwd = $(CreatePassword -Min 8 -Max 12)
 
 #Executing update keyvault script:
 . $UpdateKeyVaultScript
+#Granting access to the keyvault
+GrantAccess
 #Passing the password value to update keyvault script fucntion:
-UpdateKeyVault -Passwd $VMUserPasswd -PasswdName 'webserver-01-usr-passwd'
+UpdateKeyVault -Passwd $Passwd -PasswdName 'webserver-01-usr-passwd'
 
 <#
 New-AzVm `
@@ -44,8 +46,11 @@ New-AzVm `
 -SecurityGroupName "myNetworkSecurityGroup" `
 -PublicIpAddressName "myPublicIpAddress" `
 -OpenPorts 80,3389
+#>
 
-# Create a public IP address
+
+
+# Creating a public IP address
 $PublicIP = @{
   Name = $PublicIPName
   ResourceGroupName = $RG
@@ -61,26 +66,31 @@ $NetworkInterface = New-AzNetworkInterface `
   -Name $NIName `
   -ResourceGroupName $RG `
   -Location $Location `
-  -SubnetId $vnet.Subnets[0].Id `
+  -SubnetId $Subnet.Id `
   -PublicIpAddressId $PublicIP.Id `
-  -NetworkSecurityGroupId $nsg.Id
+  -NetworkSecurityGroupId $NSG.Id
 
-#Creating a VM
-# Define a credential object to store the username and password for the VM
-$Password = $VMUserPasswd | ConvertTo-SecureString -Force -AsPlainText
-$Credential = New-Object PSCredential($VMUserPasswd,$Password)
+#Define a credential object to store the username and password for the VM
+#Retrieve password from the keyvault
+$VMUserPasswd = $(RetrievePassword) | ConvertTo-SecureString -Force -AsPlainText
+$Credential = New-Object PSCredential($VMUsername,$VMUserPasswd)
 
-# Create the VM configuration object
-$VmName = "VirtualMachinelatest"
-$VmSize = "Standard_A1"
+#Create the VM configuration object
 $VirtualMachine = New-AzVMConfig `
-  -VMName $VmName `
-  -VMSize $VmSize
+  -VMName $VMName `
+  -VMSize $VMSize
 
+
+
+
+
+
+
+<#
 $VirtualMachine = Set-AzVMOperatingSystem `
   -VM $VirtualMachine `
   -Windows `
-  -ComputerName "MainComputer" `
+  -ComputerName "WS" `
   -Credential $Credential -ProvisionVMAgent
 
 $VirtualMachine = Set-AzVMSourceImage `
