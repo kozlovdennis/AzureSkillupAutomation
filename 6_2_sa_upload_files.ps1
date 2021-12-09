@@ -10,8 +10,8 @@ Connect-AzAccount
 
 #Upload files to a container from the local folder
 #Aquire a context
-$UploadStorage=Get-AzStorageAccount -ResourceGroupName $RG -Name $ServiceSA
-$SAContext=$UploadStorage.Context
+$UploadStorage = Get-AzStorageAccount -ResourceGroupName $RG -Name $ServiceSA
+$SAContext = $UploadStorage.Context
 
 
 #Upload a local file

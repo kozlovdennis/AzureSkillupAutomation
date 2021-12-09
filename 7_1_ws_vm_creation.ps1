@@ -1,46 +1,60 @@
 #This script creates the WebServer Virtual Machine on Azure
+#This script demands the '7_0_passwd_generator.ps1' script and the '7_0_update_keyvault.ps1' script to be in the same folder
 param (
     $Location = 'North Europe',
     $RG = 'SKILLUP-RG',
+    $NSG = 'skillup-nsg',
     $VMName = 'webserver-01',
     $VMSize = 'Standard B1ms',
     $NIName = 'webserver-01-ni',
-    $VNet = '',
+    $VNet = 'skillup-vnet',
+    $Subnet = 'PrimarySubnet',
+    $PublicIPName = 'webserver-01-pip',
     $VMUsername = 'winadmin',
-    $VMUserPasswd,
     $Blah = ''
 )
 
-#Find the path the script is located and assign to ScriptPath variable
+#Connecting to the Azure Account
+Connect-AzAccount
+
+#Find the path the script is located and assign to a variable
 $ScriptPath = $MyInvocation.MyCommand.Path
-#Linking processing answer function script file:
+#Linking the password generator script to a variable:
 $PasswdGeneratorScript = $($(Split-Path $ScriptPath -Parent) + "\" + "7_0_passwd_generator.ps1")
+#Linking the update keyvault script to a variable:
+$UpdateKeyVaultScript = $($(Split-Path $ScriptPath -Parent) + "\" + "7_0_update_keyvault.ps1")
 
 #Executing password generator script
 . $PasswdGeneratorScript
 #Getting the random password into the password variable
 $VMUserPasswd = $(CreatePassword -Min 8 -Max 12)
-Write-Host $VMUserPasswd -ForegroundColor Yellow
+
+#Executing update keyvault script:
+. $UpdateKeyVaultScript
+#Passing the password value to update keyvault script fucntion:
+UpdateKeyVault -Passwd $VMUserPasswd -PasswdName 'webserver-01-usr-passwd'
 
 <#
 New-AzVm `
 -ResourceGroupName $RG `
 -Name $VMName `
 -Location $Location `
--VirtualNetworkName "myVnet" `
+-VirtualNetworkName $VNet `
 -SubnetName "mySubnet" `
 -SecurityGroupName "myNetworkSecurityGroup" `
 -PublicIpAddressName "myPublicIpAddress" `
 -OpenPorts 80,3389
 
-
-# Create a public IP address and specify a DNS name
-$PublicIP = New-AzPublicIpAddress `
-  -ResourceGroupName $RG `
-  -Location $Location `
-  -AllocationMethod Static `
-  -IdleTimeoutInMinutes 4 `
-  -Name "mypublicdns$(Get-Random)"
+# Create a public IP address
+$PublicIP = @{
+  Name = $PublicIPName
+  ResourceGroupName = $RG
+  Location = $Location
+  Sku = 'Standard'
+  AllocationMethod = 'Static'
+  IpAddressVersion = 'IPv4'
+}
+New-AzPublicIpAddress @PublicIP
 
 #Create a virtual network card and associate it with public IP address and NSG
 $NetworkInterface = New-AzNetworkInterface `
@@ -95,6 +109,6 @@ New-AzVM `
 
 
 
+
+
 #>
-
-
