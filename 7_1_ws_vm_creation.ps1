@@ -1,17 +1,18 @@
 #This script creates the WebServer Virtual Machine on Azure
 #This script demands the '7_0_passwd_generator.ps1' script and the '7_0_update_keyvault.ps1' script to be in the same folder
+
 param (
-  $Location = 'North Europe',
-  $RG = 'SKILLUP-RG',
-  $NSG = 'skillup-nsg',
-  $VMName = 'webserver-01',
-  $VMSize = 'Standard B1ms',
-  $NIName = 'webserver-01-ni',
-  $VNet = 'skillup-vnet',
-  $Subnet = 'PrimarySubnet',
-  $PublicIPName = 'webserver-01-pip',
-  $VMUsername = 'winadmin',
-  $Blah = ''
+    $Location = 'North Europe',
+    $RG = 'SKILLUP-RG',
+    $NSG = 'skillup-nsg',
+    $VMName = 'webserver-01',
+    $VMSize = 'Standard B1ms',
+    $NIName = 'webserver-01-ni',
+    $VNet = 'skillup-vnet',
+    $Subnet = 'PrimarySubnet',
+    $PublicIPName = 'webserver-01-pip',
+    $VMUsername = 'winadmin',
+    $Blah = ''
 )
 
 #Connecting to the Azure Account
@@ -52,23 +53,23 @@ New-AzVm `
 
 # Creating a public IP address
 $PublicIP = @{
-  Name = $PublicIPName
-  ResourceGroupName = $RG
-  Location = $Location
-  Sku = 'Standard'
-  AllocationMethod = 'Static'
-  IpAddressVersion = 'IPv4'
+    Name = $PublicIPName
+    ResourceGroupName = $RG
+    Location = $Location
+    Sku = 'Standard'
+    AllocationMethod = 'Static'
+    IpAddressVersion = 'IPv4'
 }
 New-AzPublicIpAddress @PublicIP
 
 #Create a virtual network card and associate it with public IP address and NSG
 $NetworkInterface = New-AzNetworkInterface `
-  -Name $NIName `
-  -ResourceGroupName $RG `
-  -Location $Location `
-  -SubnetId $Subnet.Id `
-  -PublicIpAddressId $PublicIP.Id `
-  -NetworkSecurityGroupId $NSG.Id
+    -Name $NIName `
+    -ResourceGroupName $RG `
+    -Location $Location `
+    -SubnetId $Subnet.Id `
+    -PublicIpAddressId $PublicIP.Id `
+    -NetworkSecurityGroupId $NSG.Id
 
 #Define a credential object to store the username and password for the VM
 #Retrieve password from the keyvault
@@ -77,8 +78,8 @@ $Credential = New-Object PSCredential($VMUsername,$VMUserPasswd)
 
 #Create the VM configuration object
 $VirtualMachine = New-AzVMConfig `
-  -VMName $VMName `
-  -VMSize $VMSize
+    -VMName $VMName `
+    -VMSize $VMSize
 
 
 
