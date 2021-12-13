@@ -7,7 +7,7 @@ param (
     $NSG = 'skillup-nsg',
     $VMName = 'webserver-01',
     $VMSize = 'Standard B1ms',
-    $NIName = 'webserver-01-ni',
+    $NIСName = 'webserver-01-ni',
     $VNet = 'skillup-vnet',
     $Subnet = 'PrimarySubnet',
     $PublicIPName = 'webserver-01-pip',
@@ -64,7 +64,7 @@ New-AzPublicIpAddress @PublicIP
 
 #Create a virtual network card and associate it with public IP address and NSG
 $NetworkInterface = New-AzNetworkInterface `
-    -Name $NIName `
+    -Name $NIСName `
     -ResourceGroupName $RG `
     -Location $Location `
     -SubnetId $Subnet.Id `
