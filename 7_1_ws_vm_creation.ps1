@@ -35,7 +35,7 @@ $Passwd = $(CreatePassword -Min 8 -Max 12)
 #Granting access to the keyvault
 GrantAccess
 #Passing the password value to update keyvault script fucntion:
-UpdateKeyVault -Passwd $Passwd -PasswdName 'webserver-01-usr-passwd'
+UpdateKeyVault -Passwd $Passwd -PasswdName 'webserver-01-password'
 
 <#
 New-AzVm `
